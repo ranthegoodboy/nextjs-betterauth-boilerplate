@@ -30,6 +30,7 @@ import { toast } from "sonner";
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isPending, setIsPending] = useState(false);
 
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
@@ -48,10 +49,16 @@ export function LoginForm() {
         callbackURL: "/user-profile",
       },
       {
-        onRequest: () => {},
-        onSuccess: () => {},
+        onRequest: () => {
+          setIsPending(true);
+        },
+        onSuccess: () => {
+          toast.success("Login successful. Good to have you back!");
+          setIsPending(false);
+        },
         onError: (ctx) => {
           toast.error(ctx.error.message);
+          setIsPending(false);
         },
       }
     );
@@ -136,7 +143,7 @@ export function LoginForm() {
                   )}
                 />
 
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full" disabled={isPending}>
                   Sign In
                 </Button>
               </form>
@@ -144,7 +151,7 @@ export function LoginForm() {
 
             <div className="text-center text-sm">
               {`Don't have an account? `}
-              <a href="#" className="underline underline-offset-4">
+              <a href="/auth/register" className="underline underline-offset-4">
                 Sign up
               </a>
             </div>

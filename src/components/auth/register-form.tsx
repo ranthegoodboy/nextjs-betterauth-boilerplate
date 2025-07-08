@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
+import { signUpEmailAction } from "@/actions/sign-up-emal.actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,13 +26,17 @@ import {
 import { signUp } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function RegisterForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isPending, setIsPending] = useState(false);
+  const [isPendingTransition, startTransition] = useTransition();
 
   const form = useForm<RegisterFormSchema>({
     resolver: zodResolver(registerFormSchema),
@@ -42,23 +48,42 @@ export function RegisterForm() {
     },
   });
 
+  // If you want to use the client action, you can use the onSubmit function.
   async function onSubmit(values: RegisterFormSchema) {
-    console.log(values);
     await signUp.email(
       {
         email: values.email,
         password: values.password,
         name: values.name,
-        callbackURL: "/dashboard",
       },
       {
-        onRequest: () => {},
-        onSuccess: () => {},
+        onRequest: () => {
+          setIsPending(true);
+        },
+        onSuccess: () => {
+          toast.success("Registration complete. You're all set!");
+          setIsPending(false);
+          router.push("/auth/login");
+        },
         onError: (ctx) => {
           toast.error(ctx.error.message);
+          setIsPending(false);
         },
       }
     );
+  }
+
+  // If you want to use the server action, you can use the onSubmitServer function.
+  async function onSubmitServer(values: RegisterFormSchema) {
+    startTransition(async () => {
+      const { error, success } = await signUpEmailAction(values);
+      if (!success) {
+        toast.error(error);
+      } else {
+        toast.success("Registration complete. You're all set!");
+        router.push("/auth/login");
+      }
+    });
   }
 
   return (
@@ -187,7 +212,11 @@ export function RegisterForm() {
                   )}
                 />
 
-                <Button type="submit" className="w-full">
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isPending || isPendingTransition}
+                >
                   Create Account
                 </Button>
               </form>
@@ -195,7 +224,7 @@ export function RegisterForm() {
 
             <div className="text-center text-sm">
               Already have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
+              <a href="/auth/login" className="underline underline-offset-4">
                 Sign in
               </a>
             </div>
