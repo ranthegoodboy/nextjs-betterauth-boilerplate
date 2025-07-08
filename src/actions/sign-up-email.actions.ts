@@ -17,11 +17,19 @@ export const signUpEmailAction = async (
       },
     });
     return { data: result.user, success: true, error: null };
-  } catch {
-    return {
+  } catch (error) {
+    const errorResponse = {
       data: null,
       success: false,
-      error: "Something went wrong while registering. Please try again.",
+      error:
+        "Something went wrong while creating your account. Please try again.",
     };
+
+    if (error instanceof Error) {
+      console.log(error.message);
+      errorResponse.error = error.message;
+    }
+
+    return errorResponse;
   }
 };

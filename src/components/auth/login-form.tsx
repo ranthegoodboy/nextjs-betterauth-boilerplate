@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
+import { signInEmail } from "@/actions/sign-in-email.actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,13 +26,16 @@ import {
 import { signIn } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function LoginForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isPending, setIsPending] = useState(false);
+  const [isPendingTransition, startTransition] = useTransition();
 
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
@@ -40,8 +45,8 @@ export function LoginForm() {
     },
   });
 
+  // If you want to use the client action, you can use the onSubmit function.
   async function onSubmit(values: LoginFormSchema) {
-    console.log(values);
     await signIn.email(
       {
         email: values.email,
@@ -62,6 +67,19 @@ export function LoginForm() {
         },
       }
     );
+  }
+
+  // If you want to use the server action, you can use the onSubmitServer function.
+  async function onSubmitServer(values: LoginFormSchema) {
+    startTransition(async () => {
+      const { error, success } = await signInEmail(values);
+      if (!success) {
+        toast.error(error);
+      } else {
+        toast.success("Login successful. Good to have you back!");
+        router.push("/user-profile");
+      }
+    });
   }
 
   return (
@@ -143,7 +161,11 @@ export function LoginForm() {
                   )}
                 />
 
-                <Button type="submit" className="w-full" disabled={isPending}>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isPending || isPendingTransition}
+                >
                   Sign In
                 </Button>
               </form>

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { signUpEmailAction } from "@/actions/sign-up-emal.actions";
+import { signUpEmailAction } from "@/actions/sign-up-email.actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,

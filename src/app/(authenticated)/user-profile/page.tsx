@@ -8,7 +8,6 @@ const UserProfilePage = async () => {
     headers: await headers(),
   });
 
-  console.log("session", session);
   return (
     <div className="flex flex-col justify-center items-center gap-10">
       <h2 className="text-2xl font-bold">User Session</h2>
