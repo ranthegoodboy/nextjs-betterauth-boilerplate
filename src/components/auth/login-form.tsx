@@ -26,6 +26,7 @@ import {
 import { signIn } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -51,7 +52,6 @@ export function LoginForm() {
       {
         email: values.email,
         password: values.password,
-        callbackURL: "/user-profile",
       },
       {
         onRequest: () => {
@@ -60,6 +60,7 @@ export function LoginForm() {
         onSuccess: () => {
           toast.success("Login successful. Good to have you back!");
           setIsPending(false);
+          router.push("/user-profile");
         },
         onError: (ctx) => {
           toast.error(ctx.error.message);
@@ -109,7 +110,7 @@ export function LoginForm() {
 
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(onSubmitServer)}
                 className="grid gap-6"
               >
                 <FormField
@@ -180,9 +181,12 @@ export function LoginForm() {
           </div>
         </CardContent>
       </Card>
-      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+      {/* <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
+      </div> */}
+      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+        <Link href="/">Home</Link>
       </div>
     </div>
   );

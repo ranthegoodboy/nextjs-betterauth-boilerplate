@@ -1,13 +1,29 @@
 "use server";
 
-import { RegisterFormSchema } from "@/form-schemas/register-form-schema";
+import {
+  registerFormSchema,
+  type RegisterFormSchema,
+} from "@/form-schemas/register-form-schema";
 import { auth } from "@/lib/auth";
 import { ActionResponse } from "@/types/action-response";
 import { User } from "better-auth";
+import { APIError } from "better-auth/api";
 
 export const signUpEmailAction = async (
   formData: RegisterFormSchema
 ): Promise<ActionResponse<User | null>> => {
+  const validationResult = registerFormSchema.safeParse(formData);
+
+  if (!validationResult.success) {
+    return {
+      data: null,
+      success: false,
+      error:
+        validationResult.error.errors[0]?.message ||
+        "Invalid register form data",
+    };
+  }
+
   try {
     const result = await auth.api.signUpEmail({
       body: {
@@ -25,8 +41,7 @@ export const signUpEmailAction = async (
         "Something went wrong while creating your account. Please try again.",
     };
 
-    if (error instanceof Error) {
-      console.log(error.message);
+    if (error instanceof APIError) {
       errorResponse.error = error.message;
     }
 
