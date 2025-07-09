@@ -16,6 +16,13 @@ const UserProfilePage = async () => {
       <pre className="text-sm overflow-clip w-[400px] border border-gray-200 p-5 rounded-lg">
         {JSON.stringify(session, null, 2)}
       </pre>
+      <div>
+        {session?.user?.role === "ADMIN" && (
+          <Link href="/admin-dashboard">
+            <Button>Admin Dashboard</Button>
+          </Link>
+        )}
+      </div>
       <div className="flex gap-5">
         <Link href="/">
           <Button>Home</Button>

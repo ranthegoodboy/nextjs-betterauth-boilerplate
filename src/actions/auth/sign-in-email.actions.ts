@@ -5,7 +5,7 @@ import {
   type LoginFormSchema,
 } from "@/form-schemas/login-form-schema";
 import { auth } from "@/lib/auth";
-import { ActionResponse } from "@/types/action-response";
+import { ActionResponse } from "@/types/server-response";
 import { APIError } from "better-auth/api";
 
 export const signInEmail = async (

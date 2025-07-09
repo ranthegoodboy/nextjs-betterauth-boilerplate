@@ -17,10 +17,33 @@ export const auth = betterAuth({
       verify: verifyPassword,
     },
   },
+  user: {
+    additionalFields: {
+      role: {
+        type: ["USER", "ADMIN"],
+        input: false, // no need to be part of register process since we have a default USER role on our prisma schema
+      },
+    },
+  },
   session: {
     expiresIn: 60 * 60 * 24 * 30, // 30 days
   },
   plugins: [nextCookies()], //** Automatically set authentication cookies during server-side sign-in. **//
+
+  // ** Use database hooks to automatically set the role of a user based on their email. ** //
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(",") ?? [];
+          if (ADMIN_EMAILS.includes(user.email)) {
+            return { data: { ...user, role: "ADMIN" } };
+          }
+          return { data: user };
+        },
+      },
+    },
+  },
 
   // ** Use hooks if you want to modify requests, pre validate data, or return early. ** //
   // hooks: {

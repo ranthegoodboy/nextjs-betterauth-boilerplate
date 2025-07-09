@@ -5,7 +5,7 @@ import {
   type RegisterFormSchema,
 } from "@/form-schemas/register-form-schema";
 import { auth } from "@/lib/auth";
-import { ActionResponse } from "@/types/action-response";
+import { ActionResponse } from "@/types/server-response";
 import { User } from "better-auth";
 import { APIError } from "better-auth/api";
 
