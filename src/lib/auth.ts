@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 // import { APIError, createAuthMiddleware } from "better-auth/api";
+import { UserRole } from "@/generated/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { hashPassword, verifyPassword } from "./argon2";
 
@@ -37,7 +38,7 @@ export const auth = betterAuth({
         before: async (user) => {
           const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(",") ?? [];
           if (ADMIN_EMAILS.includes(user.email)) {
-            return { data: { ...user, role: "ADMIN" } };
+            return { data: { ...user, role: UserRole.ADMIN } };
           }
           return { data: user };
         },
