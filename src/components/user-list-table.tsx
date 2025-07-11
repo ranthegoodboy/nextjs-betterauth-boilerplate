@@ -6,6 +6,8 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import * as React from "react";
 import { DataTable } from "./table/data-table";
 
+import { deleteUser } from "@/actions/user/delete-user.actions";
+import { toggleUserActiveStatus } from "@/actions/user/toggle-user-active-status.actions";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -15,7 +17,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Switch } from "@/components/ui/switch";
+import { useUsers } from "@/hooks/user-users";
 import { User } from "better-auth";
+import { toast } from "sonner";
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -72,6 +77,45 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
+    accessorKey: "isActive",
+    header: "Active Status",
+    cell: ({ row }) => {
+      const user = row.original;
+      const isActive = row.getValue("isActive");
+
+      const handleToggleActiveStatus = async (checked: boolean) => {
+        const { success, error } = await toggleUserActiveStatus(user.id, {
+          isActive: checked,
+        });
+        if (success) {
+          toast.success(
+            `User ${checked ? "activated" : "deactivated"} successfully!`
+          );
+        } else {
+          toast.error(error || "Failed to update user status");
+        }
+      };
+
+      return (
+        <div className="flex items-center space-x-2">
+          <Switch
+            checked={isActive as boolean}
+            onCheckedChange={handleToggleActiveStatus}
+            aria-label={`Toggle active status for ${user.name}`}
+            className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-300"
+          />
+          <span
+            className={`text-sm ${
+              isActive ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {isActive ? "Active" : "Inactive"}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "emailVerified",
     header: "Email Verified",
     cell: ({ row }) => {
@@ -106,6 +150,16 @@ export const columns: ColumnDef<User>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const user = row.original;
+
+      const handleDeleteUser = async (id: string) => {
+        const { success, error } = await deleteUser(id);
+        if (success) {
+          toast.success("Successfully delete user!");
+        } else {
+          toast.error(error);
+        }
+      };
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -122,9 +176,11 @@ export const columns: ColumnDef<User>[] = [
               Copy user ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View user details</DropdownMenuItem>
             <DropdownMenuItem>Edit user</DropdownMenuItem>
-            <DropdownMenuItem className="text-red-600">
+            <DropdownMenuItem
+              className="text-red-600"
+              onClick={() => handleDeleteUser(user.id)}
+            >
               Delete user
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -134,6 +190,14 @@ export const columns: ColumnDef<User>[] = [
   },
 ];
 
-export function UserListTable({ users }: { users: User[] }) {
+const UserListTable = () => {
+  const { data: users, isLoading, isError } = useUsers();
+
+  if (isError) return <div>Something went wrong. Please refresh the page.</div>;
+  if (isLoading) return <div>Loading...</div>;
+  if (!users) return null;
+
   return <DataTable columns={columns} data={users} />;
-}
+};
+
+export default UserListTable;

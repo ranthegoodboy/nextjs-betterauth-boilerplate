@@ -1,12 +1,9 @@
 import LinkButton from "@/components/link-button";
-import { UserListTable } from "@/components/user-list-table";
-import { db } from "@/lib/db";
+import UserListTable from "@/components/user-list-table";
 
 import React from "react";
 
 const AdminDashboardPage = async () => {
-  const users = await db.user.findMany();
-
   return (
     <div className="container">
       <div className="flex items-center gap-5 mb-5">
@@ -14,7 +11,7 @@ const AdminDashboardPage = async () => {
         <h1>Admin Dashboard</h1>
       </div>
 
-      <UserListTable users={users} />
+      <UserListTable />
     </div>
   );
 };

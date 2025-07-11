@@ -24,6 +24,10 @@ export const auth = betterAuth({
         type: ["USER", "ADMIN"],
         input: false, // no need to be part of register process since we have a default USER role on our prisma schema
       },
+      isActive: {
+        type: "boolean",
+        input: false,
+      },
     },
   },
   session: {

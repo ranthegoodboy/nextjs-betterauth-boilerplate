@@ -11,6 +11,7 @@ export const getUserSession = async () => {
   return {
     user: session?.user,
     session: session?.session,
-    isAuthenticated: !!session?.user,
+    userRole: session?.user.role,
+    isAuthenticated: !!session,
   };
 };

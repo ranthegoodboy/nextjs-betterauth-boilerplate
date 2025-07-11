@@ -1,3 +1,6 @@
+import { UserRole } from "@/generated/prisma";
+import { User } from "better-auth";
+
 export type ActionResponse<T> = {
   data: T | null;
   error: string | null;
@@ -10,3 +13,8 @@ export type ApiResponse<T> = {
   success: boolean;
   status: number;
 };
+
+export type UserType = {
+  role: UserRole;
+  isActive: boolean;
+} & User;

@@ -118,3 +118,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: 1200px;
+  @apply mx-auto;
+}
