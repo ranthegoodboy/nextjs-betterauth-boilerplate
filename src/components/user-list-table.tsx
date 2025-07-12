@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import * as React from "react";
@@ -19,10 +20,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 import { useUsers } from "@/hooks/user-users";
-import { User } from "better-auth";
+import { UserType } from "@/types/server-response";
 import { toast } from "sonner";
 
-export const columns: ColumnDef<User>[] = [
+const createColumns = ({
+  onToggleStatus,
+  onDeleteUser,
+}: {
+  onToggleStatus: (id: string, checked: boolean) => void;
+  onDeleteUser: (id: string) => void;
+}): ColumnDef<UserType>[] => [
   {
     accessorKey: "id",
     header: "ID",
@@ -83,24 +90,11 @@ export const columns: ColumnDef<User>[] = [
       const user = row.original;
       const isActive = row.getValue("isActive");
 
-      const handleToggleActiveStatus = async (checked: boolean) => {
-        const { success, error } = await toggleUserActiveStatus(user.id, {
-          isActive: checked,
-        });
-        if (success) {
-          toast.success(
-            `User ${checked ? "activated" : "deactivated"} successfully!`
-          );
-        } else {
-          toast.error(error || "Failed to update user status");
-        }
-      };
-
       return (
         <div className="flex items-center space-x-2">
           <Switch
             checked={isActive as boolean}
-            onCheckedChange={handleToggleActiveStatus}
+            onCheckedChange={(checked) => onToggleStatus(user.id, checked)}
             aria-label={`Toggle active status for ${user.name}`}
             className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-300"
           />
@@ -151,15 +145,6 @@ export const columns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       const user = row.original;
 
-      const handleDeleteUser = async (id: string) => {
-        const { success, error } = await deleteUser(id);
-        if (success) {
-          toast.success("Successfully delete user!");
-        } else {
-          toast.error(error);
-        }
-      };
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -179,7 +164,7 @@ export const columns: ColumnDef<User>[] = [
             <DropdownMenuItem>Edit user</DropdownMenuItem>
             <DropdownMenuItem
               className="text-red-600"
-              onClick={() => handleDeleteUser(user.id)}
+              onClick={() => onDeleteUser(user.id)}
             >
               Delete user
             </DropdownMenuItem>
@@ -192,6 +177,40 @@ export const columns: ColumnDef<User>[] = [
 
 const UserListTable = () => {
   const { data: users, isLoading, isError } = useUsers();
+  const queryClient = useQueryClient();
+
+  const handleToggleActiveStatus = async (id: string, checked: boolean) => {
+    const { success, error } = await toggleUserActiveStatus(id, {
+      isActive: checked,
+    });
+    if (success) {
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success(
+        `User ${checked ? "activated" : "deactivated"} successfully!`
+      );
+    } else {
+      toast.error(error || "Failed to update user status");
+    }
+  };
+
+  const handleDeleteUser = async (id: string) => {
+    const { success, error } = await deleteUser(id);
+    if (success) {
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success("Successfully deleted user!");
+    } else {
+      toast.error(error || "Failed to delete user");
+    }
+  };
+
+  const columns = React.useMemo(
+    () =>
+      createColumns({
+        onToggleStatus: handleToggleActiveStatus,
+        onDeleteUser: handleDeleteUser,
+      }),
+    []
+  );
 
   if (isError) return <div>Something went wrong. Please refresh the page.</div>;
   if (isLoading) return <div>Loading...</div>;

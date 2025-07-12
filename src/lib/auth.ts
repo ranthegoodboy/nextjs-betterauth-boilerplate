@@ -8,6 +8,13 @@ import { hashPassword, verifyPassword } from "./argon2";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      prompt: "consent",
+    },
+  },
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 6,
@@ -32,6 +39,11 @@ export const auth = betterAuth({
   },
   session: {
     expiresIn: 60 * 60 * 24 * 30, // 30 days
+  },
+  account: {
+    accountLinking: {
+      enabled: false,
+    },
   },
   plugins: [nextCookies()], //** Automatically set authentication cookies during server-side sign-in. **//
 
