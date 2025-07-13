@@ -27,6 +27,7 @@ export const auth = betterAuth({
     },
     requireEmailVerification: true,
   },
+  //** Enabled email verification with error handling. **/
   emailVerification: {
     sendOnSignUp: true,
     expiresIn: 60 * 60, // 1hour expiration
@@ -34,7 +35,6 @@ export const auth = betterAuth({
     sendVerificationEmail: async ({ user, url }) => {
       const link = new URL(url);
       link.searchParams.set("callbackURL", "/auth/verify");
-
       await sendEmailAccountVerification(user.email, String(link));
     },
   },
@@ -53,6 +53,7 @@ export const auth = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 30, // 30 days
   },
+  //** Disabled account linking. Can't use the same email to sign up with different providers. **/
   account: {
     accountLinking: {
       enabled: false,

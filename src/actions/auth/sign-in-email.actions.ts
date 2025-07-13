@@ -7,6 +7,7 @@ import {
 import { auth } from "@/lib/auth";
 import { ActionResponse } from "@/types/server-response";
 import { APIError } from "better-auth/api";
+import { redirect } from "next/navigation";
 
 export const signInEmail = async (
   formData: LoginFormSchema
@@ -38,7 +39,15 @@ export const signInEmail = async (
     };
 
     if (error instanceof APIError) {
-      errorResponse.error = error.message;
+      const errCode = error.body ? error.body.code : "UNKNOWN";
+      switch (errCode) {
+        case "EMAIL_NOT_VERIFIED":
+          redirect("/auth/verify?error=email_not_verified");
+        default:
+          errorResponse.error =
+            "Something went wrong while signing in. Please try again.111";
+          break;
+      }
     }
 
     return errorResponse;

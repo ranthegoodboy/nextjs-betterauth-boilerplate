@@ -1,6 +1,7 @@
 import ResendEmailVerificationForm from "@/components/auth/resend-email-verification-form";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import React from "react";
 
 interface PageProps {
@@ -8,6 +9,8 @@ interface PageProps {
 }
 const VerifyPage = async ({ searchParams }: PageProps) => {
   const sp = await searchParams;
+
+  if (!sp.error && !sp.success) redirect("/user-profile");
 
   return (
     <div>
@@ -21,7 +24,9 @@ const VerifyPage = async ({ searchParams }: PageProps) => {
           <div className="text-destructive">
             {sp.error === "invalid_token" || sp.error === "token_expired"
               ? "The token is invalid or expired. Please request a new one."
-              : "Oops! Something went wrong. Please Try again!"}
+              : sp.error === "email_not_verified"
+                ? "Please verify your email or request a new verification below."
+                : "Oops! Something went wrong. Please Try again!"}
           </div>
           <div className="mt-10">
             <ResendEmailVerificationForm />
