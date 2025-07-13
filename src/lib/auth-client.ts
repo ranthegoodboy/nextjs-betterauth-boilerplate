@@ -7,5 +7,12 @@ const authClient = createAuthClient({
   plugins: [inferAdditionalFields<typeof auth>()], // add our custom user field {role} to the client
 });
 
-export const { signUp, signIn, signOut, useSession, sendVerificationEmail } =
-  authClient;
+export const {
+  signUp,
+  signIn,
+  signOut,
+  useSession,
+  sendVerificationEmail,
+  forgetPassword,
+  resetPassword,
+} = authClient;

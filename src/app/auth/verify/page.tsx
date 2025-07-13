@@ -13,32 +13,35 @@ const VerifyPage = async ({ searchParams }: PageProps) => {
   if (!sp.error && !sp.success) redirect("/user-profile");
 
   return (
-    <div>
-      <Link href="/auth/login">
-        <Button>Back</Button>
-      </Link>
-      <div className="my-5 text-xl font-bold">Verify Email</div>
+    <div className="container">
+      <div className="mt-20">
+        <Link href="/auth/login">
+          <Button>Back</Button>
+        </Link>
 
-      {sp.error ? (
-        <>
-          <div className="text-destructive">
-            {sp.error === "invalid_token" || sp.error === "token_expired"
-              ? "The token is invalid or expired. Please request a new one."
-              : sp.error === "email_not_verified"
-                ? "Please verify your email or request a new verification below."
-                : "Oops! Something went wrong. Please Try again!"}
-          </div>
-          <div className="mt-10">
-            <ResendEmailVerificationForm />
-          </div>
-        </>
-      ) : null}
+        <div className="my-5 text-lg font-bold">Verify Email</div>
 
-      {sp.success ? (
-        <div className="text-green-500">
-          Success! You have re-send a verification link to your email.
-        </div>
-      ) : null}
+        {sp.error ? (
+          <>
+            <div className="text-destructive">
+              {sp.error === "invalid_token" || sp.error === "token_expired"
+                ? "The token is invalid or expired. Please request a new one."
+                : sp.error === "email_not_verified"
+                  ? "Please verify your email or request a new verification below."
+                  : "Oops! Something went wrong. Please Try again!"}
+            </div>
+            <div className="mt-10">
+              <ResendEmailVerificationForm />
+            </div>
+          </>
+        ) : null}
+
+        {sp.success ? (
+          <div className="text-green-500">
+            Success! You have re-send a verification link to your email.
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 };

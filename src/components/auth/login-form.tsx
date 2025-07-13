@@ -129,7 +129,14 @@ export function LoginForm() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <div className="flex justify-between">
+                        <FormLabel>Password</FormLabel>
+                        <Link href="/auth/forgot-password">
+                          <FormLabel className="hover:underline cursor-pointer">
+                            Forgot Password?
+                          </FormLabel>
+                        </Link>
+                      </div>
                       <FormControl>
                         <div className="relative">
                           <Input
@@ -154,7 +161,6 @@ export function LoginForm() {
                     </FormItem>
                   )}
                 />
-
                 <Button
                   type="submit"
                   className="w-full"

@@ -43,9 +43,11 @@ export const signInEmail = async (
       switch (errCode) {
         case "EMAIL_NOT_VERIFIED":
           redirect("/auth/verify?error=email_not_verified");
+
         default:
           errorResponse.error =
-            "Something went wrong while signing in. Please try again.111";
+            error.body?.message ||
+            "Something went wrong while signing in. Please try again.";
           break;
       }
     }

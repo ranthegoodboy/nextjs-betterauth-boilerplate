@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 // import { APIError, createAuthMiddleware } from "better-auth/api";
+import { sendEmailPasswordReset } from "@/actions/email/email-reset-password.action";
 import { sendEmailAccountVerification } from "@/actions/email/email-verification.action";
 import { UserRole } from "@/generated/prisma";
 import { nextCookies } from "better-auth/next-js";
@@ -26,11 +27,13 @@ export const auth = betterAuth({
       verify: verifyPassword,
     },
     requireEmailVerification: true,
+    sendResetPassword: async ({ user, url }) => {
+      await sendEmailPasswordReset(user.email, url);
+    },
   },
   //** Enabled email verification with error handling. **/
   emailVerification: {
     sendOnSignUp: true,
-    expiresIn: 60 * 60, // 1hour expiration
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
       const link = new URL(url);
