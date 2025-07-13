@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 // import { APIError, createAuthMiddleware } from "better-auth/api";
+import { sendEmailAccountVerification } from "@/actions/email/email-verification.action";
 import { UserRole } from "@/generated/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { hashPassword, verifyPassword } from "./argon2";
@@ -23,6 +24,18 @@ export const auth = betterAuth({
     password: {
       hash: hashPassword,
       verify: verifyPassword,
+    },
+    requireEmailVerification: true,
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    expiresIn: 60 * 60, // 1hour expiration
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      const link = new URL(url);
+      link.searchParams.set("callbackURL", "/auth/verify");
+
+      await sendEmailAccountVerification(user.email, String(link));
     },
   },
   user: {

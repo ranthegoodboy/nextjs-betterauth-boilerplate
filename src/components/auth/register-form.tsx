@@ -63,7 +63,9 @@ export function RegisterForm() {
           setIsPending(true);
         },
         onSuccess: () => {
-          toast.success("Registration complete. You're all set!");
+          toast.success(
+            "Registered! An email has been sent. Please verify your account before logging in."
+          );
           setIsPending(false);
           router.push("/auth/login");
         },
@@ -82,7 +84,10 @@ export function RegisterForm() {
       if (!success) {
         toast.error(error);
       } else {
-        toast.success("Registration complete. You're all set!");
+        toast.success(
+          "Registered! An email has been sent. Please verify your account before logging in."
+        );
+
         router.push("/auth/login");
       }
     });

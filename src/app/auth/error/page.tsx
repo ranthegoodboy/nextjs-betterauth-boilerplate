@@ -13,6 +13,7 @@ const AuthErrorPage = async ({ searchParams }: PageProps) => {
       <Link href="/auth/login">
         <Button>Back</Button>
       </Link>
+      <div className="my-5 text-xl font-bold">Login</div>
       <div className="text-destructive">
         {sp.error === "account_not_linked"
           ? "This account is already linked to another sign-in method."
