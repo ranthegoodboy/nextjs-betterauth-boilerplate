@@ -6,7 +6,7 @@ import {
 import { createAuthClient } from "better-auth/react";
 
 const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_APP_URL,
   plugins: [inferAdditionalFields<typeof auth>(), magicLinkClient()], // add our custom user field {role} to the client
 });
 
