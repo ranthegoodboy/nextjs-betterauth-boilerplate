@@ -9,7 +9,7 @@ export const registerFormSchema = z
       message: "Please enter a valid email address.",
     }),
     password: z.string().min(6, {
-      message: "Password must be at least 8 characters.",
+      message: "Password must be at least 6 characters.",
     }),
     confirmPassword: z.string(),
   })
