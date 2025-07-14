@@ -5,7 +5,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { sendEmailMagicLinkAction } from "@/actions/email/email-magic-link.action";
 import { sendEmailPasswordReset } from "@/actions/email/email-reset-password.action";
 import { sendEmailAccountVerification } from "@/actions/email/email-verification.action";
-import { UserRole } from "@/generated/prisma";
+import { UserRole } from "@prisma/client";
 import { nextCookies } from "better-auth/next-js";
 import { magicLink } from "better-auth/plugins";
 import { hashPassword, verifyPassword } from "./argon2";

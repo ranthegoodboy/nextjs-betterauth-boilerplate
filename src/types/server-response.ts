@@ -1,4 +1,4 @@
-import { UserRole } from "@/generated/prisma";
+import { UserRole } from "@prisma/client";
 import { User } from "better-auth";
 
 export type ActionResponse<T> = {

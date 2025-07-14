@@ -1,9 +1,9 @@
 "use server";
 
 import { getUserSession } from "@/actions/auth/get-user-session.actions";
-import { UserRole } from "@/generated/prisma";
 import { db } from "@/lib/db";
 import { ActionResponse } from "@/types/server-response";
+import { UserRole } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export const deleteUser = async (id: string): Promise<ActionResponse<null>> => {
