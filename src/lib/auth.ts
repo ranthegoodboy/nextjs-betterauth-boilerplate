@@ -2,10 +2,12 @@ import { prisma } from "@/lib/prisma";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 // import { APIError, createAuthMiddleware } from "better-auth/api";
+import { sendEmailMagicLinkAction } from "@/actions/email/email-magic-link.action";
 import { sendEmailPasswordReset } from "@/actions/email/email-reset-password.action";
 import { sendEmailAccountVerification } from "@/actions/email/email-verification.action";
 import { UserRole } from "@/generated/prisma";
 import { nextCookies } from "better-auth/next-js";
+import { magicLink } from "better-auth/plugins";
 import { hashPassword, verifyPassword } from "./argon2";
 
 export const auth = betterAuth({
@@ -62,7 +64,18 @@ export const auth = betterAuth({
       enabled: false,
     },
   },
-  plugins: [nextCookies()], //** Automatically set authentication cookies during server-side sign-in. **//
+  plugins: [
+    nextCookies(), //** Automatically set authentication cookies during server-side sign-in. **//
+    magicLink({
+      sendMagicLink: async ({ email, url }) => {
+        await sendEmailMagicLinkAction(email, url);
+      },
+    }),
+    //** If you want to customize the session object, you can use this plugin. **//
+    // customSession(async ({ user, session }) => {
+    //   return {};
+    // }),
+  ],
 
   // ** Use database hooks to automatically set the role of a user based on their email. ** //
   databaseHooks: {
