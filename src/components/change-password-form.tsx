@@ -25,7 +25,6 @@ import {
 } from "@/form-schemas/change-password-form-schema";
 
 import { changePasswordAction } from "@/actions/auth/change-password.action";
-import { auth } from "@/lib/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -44,6 +43,7 @@ export function ChangePasswordForm() {
     defaultValues: {
       currentPassword: "",
       newPassword: "",
+      confirmNewPassword: "",
     },
   });
 
@@ -111,6 +111,37 @@ export function ChangePasswordForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>New Password</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            className="pr-10"
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                          >
+                            {showPassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="confirmNewPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Confirm New Password</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input

@@ -1,13 +1,18 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
+import { Loader } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
   const { data: session, isPending } = useSession();
 
   if (isPending) {
-    return <Button variant={"default"}>Login</Button>;
+    return (
+      <div className="flex justify-center items-center h-dvh">
+        <Loader className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   const href = session ? "/user-profile" : "/auth/login";
