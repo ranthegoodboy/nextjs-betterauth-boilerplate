@@ -21,6 +21,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { useUsers } from "@/hooks/user-users";
 import { UserType } from "@/types/server-response";
+import { UserRole } from "@prisma/client";
 import { toast } from "sonner";
 
 const createColumns = ({
@@ -96,7 +97,7 @@ const createColumns = ({
             checked={isActive as boolean}
             onCheckedChange={(checked) => onToggleStatus(user.id, checked)}
             aria-label={`Toggle active status for ${user.name}`}
-            className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-300"
+            className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-300 cursor-pointer"
           />
           <span
             className={`text-sm ${
@@ -160,14 +161,18 @@ const createColumns = ({
             >
               Copy user ID
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit user</DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-red-600"
-              onClick={() => onDeleteUser(user.id)}
-            >
-              Delete user
-            </DropdownMenuItem>
+
+            {user.role !== UserRole.ADMIN && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="text-red-600"
+                  onClick={() => onDeleteUser(user.id)}
+                >
+                  Delete user
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );
