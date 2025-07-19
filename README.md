@@ -70,7 +70,6 @@ A comprehensive, production-ready authentication boilerplate built with **Next.j
 ### 🎨 Modern UI/UX
 
 - **Responsive Design**: Mobile-first approach
-- **Dark/Light Mode**: Theme switching with next-themes
 - **Interactive Components**:
   - Real-time form validation
   - Loading states and transitions
@@ -241,7 +240,7 @@ Includes comprehensive models:
 
 - User management table with sorting and filtering
 - Toggle user active/inactive status
-- Delete users with confirmation
+- Delete users (Make sure to create confirmation dialog)
 - View user roles and verification status
 
 ### Auto Admin Assignment
@@ -377,11 +376,6 @@ MIT License - see LICENSE file for details
 - **Prisma**: [Documentation](https://prisma.io/docs) | [Schema Reference](https://prisma.io/docs/reference/api-reference/prisma-schema-reference)
 - **shadcn/ui**: [Documentation](https://ui.shadcn.com/) | [Components](https://ui.shadcn.com/docs/components)
 - **React Email**: [Documentation](https://react.email/) | [Examples](https://react.email/examples)
-
-### 🐛 Issues & Questions
-
-- [Open an Issue](https://github.com/your-username/nextjs-better-auth-boilerplate/issues)
-- [Discussions](https://github.com/your-username/nextjs-better-auth-boilerplate/discussions)
 
 ---
 
