@@ -10,7 +10,7 @@ interface UpdateUserData {
   isActive: boolean;
 }
 
-export const toggleUserActiveStatus = async (
+export const toggleUserActiveStatusAction = async (
   id: string,
   data: UpdateUserData
 ): Promise<ActionResponse<null>> => {

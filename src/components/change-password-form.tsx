@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { signUpEmailAction } from "@/actions/auth/sign-up-email.actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -27,13 +25,11 @@ import {
 import { changePasswordAction } from "@/actions/auth/change-password.action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function ChangePasswordForm() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const [isPending, startTransition] = useTransition();

@@ -7,8 +7,8 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import * as React from "react";
 import { DataTable } from "./table/data-table";
 
-import { deleteUser } from "@/actions/user/delete-user.actions";
-import { toggleUserActiveStatus } from "@/actions/user/toggle-user-active-status.actions";
+import { deleteUserAction } from "@/actions/user/delete-user.actions";
+import { toggleUserActiveStatusAction } from "@/actions/user/toggle-user-active-status.actions";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -180,7 +180,7 @@ const UserListTable = () => {
   const queryClient = useQueryClient();
 
   const handleToggleActiveStatus = async (id: string, checked: boolean) => {
-    const { success, error } = await toggleUserActiveStatus(id, {
+    const { success, error } = await toggleUserActiveStatusAction(id, {
       isActive: checked,
     });
     if (success) {
@@ -194,7 +194,7 @@ const UserListTable = () => {
   };
 
   const handleDeleteUser = async (id: string) => {
-    const { success, error } = await deleteUser(id);
+    const { success, error } = await deleteUserAction(id);
     if (success) {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
       toast.success("Successfully deleted user!");

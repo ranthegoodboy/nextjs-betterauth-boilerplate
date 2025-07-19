@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { signInEmail } from "@/actions/auth/sign-in-email.actions";
+import { signInEmailAction } from "@/actions/auth/sign-in-email.actions";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -66,7 +66,7 @@ export function LoginForm() {
   // If you want to use the server action, you can use the onSubmitServer function.
   async function onSubmitServer(values: LoginFormSchema) {
     startTransition(async () => {
-      const { error, success } = await signInEmail(values);
+      const { error, success } = await signInEmailAction(values);
       if (!success) {
         toast.error(error);
       } else {

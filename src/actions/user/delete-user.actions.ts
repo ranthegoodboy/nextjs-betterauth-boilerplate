@@ -6,7 +6,9 @@ import { ActionResponse } from "@/types/server-response";
 import { UserRole } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
-export const deleteUser = async (id: string): Promise<ActionResponse<null>> => {
+export const deleteUserAction = async (
+  id: string
+): Promise<ActionResponse<null>> => {
   const { user, userRole, isAuthenticated } = await getUserSession();
 
   if (userRole !== UserRole.ADMIN || !isAuthenticated) {

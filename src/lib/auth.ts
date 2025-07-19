@@ -3,8 +3,8 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 // import { APIError, createAuthMiddleware } from "better-auth/api";
 import { sendEmailMagicLinkAction } from "@/actions/email/email-magic-link.action";
-import { sendEmailPasswordReset } from "@/actions/email/email-reset-password.action";
-import { sendEmailAccountVerification } from "@/actions/email/email-verification.action";
+import { sendEmailPasswordResetAction } from "@/actions/email/email-reset-password.action";
+import { sendEmailAccountVerificationAction } from "@/actions/email/email-verification.action";
 import { UserRole } from "@prisma/client";
 import { nextCookies } from "better-auth/next-js";
 import { magicLink } from "better-auth/plugins";
@@ -30,7 +30,7 @@ export const auth = betterAuth({
     },
     requireEmailVerification: true,
     sendResetPassword: async ({ user, url }) => {
-      await sendEmailPasswordReset(user.email, url);
+      await sendEmailPasswordResetAction(user.email, url);
     },
   },
   //** Enabled email verification with error handling. **/
@@ -40,7 +40,7 @@ export const auth = betterAuth({
     sendVerificationEmail: async ({ user, url }) => {
       const link = new URL(url);
       link.searchParams.set("callbackURL", "/auth/verify");
-      await sendEmailAccountVerification(user.email, String(link));
+      await sendEmailAccountVerificationAction(user.email, String(link));
     },
   },
   user: {

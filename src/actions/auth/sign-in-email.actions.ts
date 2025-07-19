@@ -9,7 +9,7 @@ import { ActionResponse } from "@/types/server-response";
 import { APIError } from "better-auth/api";
 import { redirect } from "next/navigation";
 
-export const signInEmail = async (
+export const signInEmailAction = async (
   formData: LoginFormSchema
 ): Promise<ActionResponse<null>> => {
   const validationResult = loginFormSchema.safeParse(formData);

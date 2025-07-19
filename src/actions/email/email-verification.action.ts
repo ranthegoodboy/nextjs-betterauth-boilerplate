@@ -6,7 +6,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export const sendEmailAccountVerification = async (
+export const sendEmailAccountVerificationAction = async (
   email: string,
   confirmationLink: string
 ): Promise<ActionResponse<null>> => {

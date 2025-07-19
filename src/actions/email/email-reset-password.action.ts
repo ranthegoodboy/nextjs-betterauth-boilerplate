@@ -6,7 +6,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export const sendEmailPasswordReset = async (
+export const sendEmailPasswordResetAction = async (
   email: string,
   passwordResetLink: string
 ): Promise<ActionResponse<null>> => {
